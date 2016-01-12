@@ -25,13 +25,20 @@ const browser = {
 	createPost: sinon.stub().yields()
 };
 
+//And the events object
+const events = {
+	onCommand: sinon.stub().yields(),
+	onNotification: sinon.stub.yields()
+};
+
 describe('plugin', () => {
-	let sandbox, notificationSpy, commandSpy;
+	let sandbox;
 	beforeEach(() => {
 		sandbox = sinon.sandbox.create();
-		notificationSpy = sinon.spy();
-		commandSpy = sinon.spy();
+		
 		browser.createPost.reset();
+		events.onCommand.reset();
+		events.onNotification.reset();
 	});
 	afterEach(() => {
 		sandbox.restore();
@@ -54,24 +61,14 @@ describe('plugin', () => {
 	});
 	
 	describe('prepare()', () => {
-		it('Should register commands', () => {
-			const events = {
-				onCommand: commandSpy,
-				onNotification: notificationSpy
-			};
-			
+		it('Should register commands', () => {			
 			plugin.prepare({'prefix': true}, fakeConfig, events, undefined);
-			commandSpy.calledWith('echo').should.be.true;
+			events.onCommand.calledWith('echo').should.be.true;
 		});
 		
-		it('Should handle empty config gracefully', () => {
-			const events = {
-				onCommand: commandSpy,
-				onNotification: notificationSpy
-			};
-			
+		it('Should handle empty config gracefully', () => {			
 			plugin.prepare(null, fakeConfig, events, undefined);
-			commandSpy.calledWith('echo').should.be.true;
+			events.onCommand.calledWith('echo').should.be.true;
 		});
 	});
 	
