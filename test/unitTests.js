@@ -27,8 +27,8 @@ const browser = {
 
 //And the events object
 const events = {
-	onCommand: sinon.stub().yields(),
-	onNotification: sinon.stub.yields()
+	onCommand: sinon.stub().callsArg(3),
+	onNotification: sinon.stub().yields()
 };
 
 describe('plugin', () => {
